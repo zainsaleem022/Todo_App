@@ -13,7 +13,7 @@ passport.use(
       scope: ["profile", "email"],
     },
     function (accessToken, refreshToken, profile, callback) {
-      console.log("profile", profile);
+      // console.log("profile", profile);
       callback(null, profile);
     }
   )

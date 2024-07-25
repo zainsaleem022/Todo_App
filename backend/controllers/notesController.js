@@ -4,7 +4,7 @@ const { pool } = require("../config/dbConnection.js");
 const addNote = async (req, res) => {
   const { user_id, note_text } = req.body;
 
-  console.log(note_text);
+  // console.log(note_text);
 
   try {
     const result = await pool.query(
@@ -43,8 +43,8 @@ const updateNote = async (req, res) => {
   const { note_text } = req.body;
   const { note_id } = req.params;
 
-  console.log("note_id", note_id);
-  console.log("note_text", note_text);
+  // console.log("note_id", note_id);
+  // console.log("note_text", note_text);
 
   try {
     const result = await pool.query(
