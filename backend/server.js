@@ -21,8 +21,4 @@ app.use(
 app.use("/", userRoutes);
 app.use("/todo", notesRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Hello World").status(200);
-});
-
 module.exports = app;

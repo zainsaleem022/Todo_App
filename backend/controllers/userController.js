@@ -13,6 +13,12 @@ class UserController {
   async signIn(req, res) {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
+    }
+
     try {
       const user = await this.User.findByEmail(email);
 
@@ -29,7 +35,7 @@ class UserController {
         res.status(401).json({ message: "Invalid credentials" });
       }
     } catch (err) {
-      console.error("Error signing in", err);
+      // console.error("Error signing in", err);
       res.status(500).json({ message: "Internal server error" });
     }
   }
@@ -37,10 +43,22 @@ class UserController {
   async signUp(req, res) {
     const { name, email, password } = req.body;
 
+    if (!name || !email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Name, email, and password are required" });
+    }
+
+    // Validate email format
+    if (!email.includes("@")) {
+      return res.status(400).json({ message: "Invalid email" });
+    }
+
     try {
       const user = await this.User.create({ name, email, password });
       const token = generateToken(user.name, user.email);
-      const { password, ...userWithoutPassword } = user;
+
+      const { password: userPassword, ...userWithoutPassword } = user;
 
       res.status(201).json({
         message: "Signup successful",

@@ -27,8 +27,6 @@ const protect = (req, res, next) => {
         email: decoded.email,
       };
 
-      // console.log("protection done")
-
       next(); // Continue to the next middleware or route handler
     } catch (error) {
       console.error(error);

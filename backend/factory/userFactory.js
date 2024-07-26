@@ -1,4 +1,4 @@
-const User = require("../classes/User"); // Adjust the path as necessary
+const User = require("../classes/User");
 const UserController = require("../controllers/userController");
 
 function createUserController() {

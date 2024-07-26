@@ -1,23 +1,26 @@
 const express = require("express");
 const router = express.Router();
-const {
-  addNote,
-  getNotes,
-  updateNote,
-  deleteNote,
-} = require("../controllers/notesController.js");
+const createNotesController = require("../factory/notesFactory.js");
 const protect = require("../config/verifyUser.js");
 
+const notesController = createNotesController();
+
 // Add a new note
-router.post("/", protect, addNote);
+router.post("/", protect, (req, res) => notesController.addNote(req, res));
 
 // Get all notes for a specific user
-router.get("/:user_id", protect, getNotes);
+router.get("/:user_id", protect, (req, res) =>
+  notesController.getNotes(req, res)
+);
 
 // Update a note
-router.put("/:note_id", protect, updateNote);
+router.put("/:note_id", protect, (req, res) =>
+  notesController.updateNote(req, res)
+);
 
 // Delete a note
-router.delete("/:note_id", protect, deleteNote);
+router.delete("/:note_id", protect, (req, res) =>
+  notesController.deleteNote(req, res)
+);
 
 module.exports = router;
