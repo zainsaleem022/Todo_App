@@ -1,6 +1,6 @@
 // user.js
 const { pool } = require("../config/dbConnection.js");
-const bcrypt = require("bcrypt");
+const argon2 = require("argon2");
 
 class User {
   static findByEmail;
@@ -22,7 +22,7 @@ User.findByEmail = async (email) => {
 
 User.create = async ({ name, email, password }) => {
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await argon2.hash(password);
     const result = await pool.query(
       "INSERT INTO todo_users (name, email, password) VALUES ($1, $2, $3) RETURNING *",
       [name, email, hashedPassword]

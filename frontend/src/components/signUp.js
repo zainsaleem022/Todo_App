@@ -44,7 +44,7 @@ export default function SignUp() {
         } catch (err) {
           console.log(err);
         }
-        localStorage.removeItem("isGoogleAuthInitiated"); // Clean up after successful fetch
+        localStorage.removeItem("isGoogleAuthInitiated");
       }
     };
 
@@ -85,10 +85,6 @@ export default function SignUp() {
     } catch (error) {
       toast.error("User with this Email Already Exists");
     }
-  };
-
-  const handleContinueWithoutAccount = () => {
-    navigate("/todo");
   };
 
   if (redirectToTodo) {
@@ -165,15 +161,6 @@ export default function SignUp() {
               sx={{ mt: 3, mb: 1 }}
             >
               Sign Up
-            </Button>
-            <Button
-              type="button"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 2, mb: 1 }}
-              onClick={handleContinueWithoutAccount}
-            >
-              Continue without an account
             </Button>
             <Button
               onClick={googleAuth}

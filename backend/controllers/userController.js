@@ -1,5 +1,5 @@
 const generateToken = require("../config/generateToken.js");
-const bcrypt = require("bcrypt");
+const argon2 = require("argon2");
 
 class UserController {
   constructor(User) {
@@ -22,7 +22,7 @@ class UserController {
     try {
       const user = await this.User.findByEmail(email);
 
-      if (user && (await bcrypt.compare(password, user.password))) {
+      if (user && (await argon2.verify(user.password, password))) {
         const token = generateToken(user.name, user.email);
         const { password, ...userWithoutPassword } = user;
 
