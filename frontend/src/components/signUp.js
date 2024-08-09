@@ -35,7 +35,7 @@ export default function SignUp() {
         new URLSearchParams(location.search).get("success") === "true"
       ) {
         try {
-          const url = "http://localhost:5000/auth/login/success";
+          const url = `${process.env.REACT_APP_BACKEND_URL}/auth/login/success`;
           const { data } = await axios.get(url, { withCredentials: true });
           const userData = data.user._json;
           setName(userData.name);
@@ -53,7 +53,7 @@ export default function SignUp() {
 
   const googleAuth = () => {
     localStorage.setItem("isGoogleAuthInitiated", "true");
-    window.open("http://localhost:5000/auth/google", "_self");
+    window.open(`${process.env.REACT_APP_BACKEND_URL}/auth/google`, "_self");
   };
 
   const handleSubmit = async (event) => {
@@ -71,7 +71,10 @@ export default function SignUp() {
     };
 
     try {
-      const response = await axios.post("http://localhost:5000/signup", data);
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/signup`,
+        data
+      );
 
       if (response.status === 201) {
         const { user, token } = response.data;
@@ -118,6 +121,7 @@ export default function SignUp() {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
+                  className="textfield"
                   required
                   fullWidth
                   id="name"
@@ -130,6 +134,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  className="textfield"
                   required
                   fullWidth
                   id="email"
@@ -142,6 +147,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  className="textfield"
                   required
                   fullWidth
                   name="password"

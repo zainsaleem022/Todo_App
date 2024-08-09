@@ -10,9 +10,11 @@ const app = express();
 connectDB();
 app.use(express.json()); //to accept JSON data
 
+console.log("FRONTEND_URL:", process.env.FRONTEND_URL); // Add this line for debugging
+
 app.use(
   cors({
-    origin: "http://localhost:3001", // your frontend domain
+    origin: `${process.env.FRONTEND_URL}`, // your frontend domain
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })

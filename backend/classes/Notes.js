@@ -6,6 +6,7 @@ class Notes {
   static getNotes;
   static updateNote;
   static deleteNote;
+  static searchNotes;
 }
 
 Notes.addNote = async (user_id, note_text) => {
@@ -65,5 +66,20 @@ Notes.deleteNote = async (note_id) => {
     return { success: false, error: "Internal server error" };
   }
 };
+
+Notes.searchNotes = async (user_id, query) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM notes WHERE user_id = $1 AND note_text ILIKE $2 ORDER BY created_at DESC",
+      [user_id, `%${query}%`]
+    );
+    return { success: true, notes: result.rows };
+  } catch (err) {
+    console.error("Error searching notes", err);
+    return { success: false, error: "Internal server error" };
+  }
+};
+
+module.exports = Notes;
 
 module.exports = Notes;

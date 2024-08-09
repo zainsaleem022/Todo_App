@@ -5,12 +5,12 @@ import TodoPage from "./pages/TodoPage";
 
 function App() {
   return (
-    <>
+    <div className="app-container">
       <Routes>
         <Route exact path="/" element={<HomePage />} />
         <Route path="/todo" element={<TodoPage />} />
       </Routes>
-    </>
+    </div>
   );
 }
 

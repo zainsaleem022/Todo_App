@@ -23,4 +23,9 @@ router.delete("/:note_id", protect, (req, res) =>
   notesController.deleteNote(req, res)
 );
 
+// Search notes for a specific user
+router.get("/search/:user_id", protect, (req, res) =>
+  notesController.searchNotes(req, res)
+);
+
 module.exports = router;

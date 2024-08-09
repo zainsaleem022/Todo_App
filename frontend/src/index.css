@@ -1,0 +1,14 @@
+body,
+.app-container {
+  background-color: #10132e;
+}
+
+textarea {
+  background-color: rgb(243, 243, 243);
+  color: "white";
+  background-color: "white";
+}
+
+.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: #007acc; /* Red border color */
+}

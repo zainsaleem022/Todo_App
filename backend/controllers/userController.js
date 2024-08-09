@@ -79,7 +79,7 @@ class UserController {
   }
 
   handleGoogleCallback(req, res) {
-    res.redirect("http://localhost:3001/?success=true"); // Redirect to signup with a success query
+    res.redirect(`${process.env.FRONTEND_URL}/?success=true`); // Redirect to signup with a success query
   }
 
   handleGoogleLoginSuccess(req, res) {

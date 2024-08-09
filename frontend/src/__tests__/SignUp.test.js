@@ -20,7 +20,7 @@ describe("SignUp Component", () => {
   });
 
   test("successful sign up", async () => {
-    mock.onPost("http://localhost:5000/signup").reply(201, {
+    mock.onPost(`${process.env.BACKEND_URL}/signup`).reply(201, {
       user: { name: "Test User", email: "test@example.com" },
       token: "testtoken123",
     });

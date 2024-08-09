@@ -80,6 +80,25 @@ class NotesController {
         .json({ message: result.error });
     }
   }
+
+  async searchNotes(req, res) {
+    const { user_id } = req.params;
+    const { query } = req.query;
+
+    if (!user_id || !query) {
+      return res
+        .status(400)
+        .json({ message: "User ID and search query are required" });
+    }
+
+    const result = await this.Notes.searchNotes(user_id, query);
+
+    if (result.success) {
+      res.status(200).json(result.notes);
+    } else {
+      res.status(500).json({ message: result.error });
+    }
+  }
 }
 
 module.exports = NotesController;
