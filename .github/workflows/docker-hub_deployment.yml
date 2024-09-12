@@ -1,0 +1,44 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - uses: actions/checkout@v4
+
+    # Log in to Docker Hub
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+    # Build the Backend Docker image
+    - name: Build backend Docker image
+      run: docker build ./backend --file ./backend/Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/todo-backend-image:latest
+
+    # Tag the Backend Docker image
+    - name: Tag backend Docker image
+      run: docker tag ${{ secrets.DOCKERHUB_USERNAME }}/todo-backend-image:latest ${{ secrets.DOCKERHUB_USERNAME }}/todo-backend-image:latest
+
+    # Push the Backend Docker image
+    - name: Push backend Docker image
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/todo-backend-image:latest
+
+    # Build the Frontend Docker image
+    - name: Build frontend Docker image
+      run: docker build ./frontend --file ./frontend/Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/todo-frontend-image:latest
+
+    # Tag the Frontend Docker image
+    - name: Tag frontend Docker image
+      run: docker tag ${{ secrets.DOCKERHUB_USERNAME }}/todo-frontend-image:latest ${{ secrets.DOCKERHUB_USERNAME }}/todo-frontend-image:latest
+
+    # Push the Frontend Docker image
+    - name: Push frontend Docker image
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/todo-frontend-image:latest
