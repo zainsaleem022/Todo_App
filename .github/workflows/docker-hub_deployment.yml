@@ -1,0 +1,113 @@
+name: Docker Image CI/CD
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v4
+
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      # Build and Push Backend Docker Image
+      - name: Build backend Docker image
+        run: docker build ./backend --file ./backend/Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/todo-backend-image:latest
+      - name: Push backend Docker image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/todo-backend-image:latest
+
+      # Build and Push Frontend Docker Image
+      - name: Build frontend Docker image
+        run: docker build ./frontend --file ./frontend/Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/todo-frontend-image:latest
+      - name: Push frontend Docker image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/todo-frontend-image:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # Set up SSH access to EC2 instance
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Deploy to EC2
+      - name: Deploy to EC2
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          PGUSER: ${{ secrets.PGUSER }}
+          PGHOST: ${{ secrets.PGHOST }}
+          PGDATABASE: ${{ secrets.PGDATABASE }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD }}
+          PGPORT: ${{ secrets.PGPORT }}
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            # Pull the latest Docker images
+            docker pull $DOCKERHUB_USERNAME/todo-backend-image:latest
+            docker pull $DOCKERHUB_USERNAME/todo-frontend-image:latest
+
+            # Create or update docker-compose.yml
+            cat <<EOT > docker-compose.yml
+            version: '3'
+            services:
+              backend:
+                image: $DOCKERHUB_USERNAME/todo-backend-image:latest
+                container_name: todo-backend
+                ports:
+                  - "5000:5000"
+                environment:
+                  - FRONTEND_URL=http://localhost
+                  - PGUSER=$PGUSER
+                  - PGHOST=$PGHOST
+                  - PGDATABASE=$PGDATABASE
+                  - PGPASSWORD=$PGPASSWORD
+                  - PGPORT=$PGPORT
+                networks:
+                  - todo_app_network
+                depends_on:
+                  - postgres
+
+              postgres:
+                image: postgres:13
+                environment:
+                  - POSTGRES_USER=$POSTGRES_USER
+                  - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+                  - POSTGRES_DB=$POSTGRES_DB
+                ports:
+                  - "5432:5432"
+                volumes:
+                  - postgres_data:/var/lib/postgresql/data
+                networks:
+                  - todo_app_network
+
+              nginx:
+                image: $DOCKERHUB_USERNAME/todo-frontend-image:latest
+                container_name: todo-nginx
+                ports:
+                  - "80:80"
+                networks:
+                  - todo_app_network
+                depends_on:
+                  - backend
+
+            volumes:
+              postgres_data:
+
+            networks:
+              todo_app_network:
+            EOT
+
+            # Run the application using Docker Compose
+            docker-compose down
+            docker-compose up -d
+          EOF
