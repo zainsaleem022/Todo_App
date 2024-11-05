@@ -1,15 +1,15 @@
-version: "3.8"
-
 services:
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: todo-frontend
-    ports:
-      - "3001:3001"
+    # ports:
+    # - "3001:3001"
     environment:
-      - REACT_APP_BACKEND_URL=http://localhost:5000
+      - REACT_APP_BACKEND_URL=/api
+      # - REACT_APP_BACKEND_URL=http://localhost:5000
+      # - REACT_APP_BACKEND_URL=http://backend:5000
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -26,7 +26,8 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - FRONTEND_URL=http://localhost:3001
+      - FRONTEND_URL=http://localhost
+      # - FRONTEND_URL=http://frontend:3001
       - PGUSER=${PGUSER}
       - PGHOST=${PGHOST}
       - PGDATABASE=${PGDATABASE}
@@ -59,3 +60,15 @@ volumes:
 
 networks:
   todo_app_network:
+
+  # nginx:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   container_name: todo-nginx
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - todo_app_network

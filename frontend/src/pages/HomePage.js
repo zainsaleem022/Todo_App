@@ -13,6 +13,11 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(
+      "process.env.REACT_APP_BACKEND_URL",
+      process.env.REACT_APP_BACKEND_URL
+    );
+
     const userInfo = localStorage.getItem("userInfo");
     const { user, token } = userInfo
       ? JSON.parse(userInfo)

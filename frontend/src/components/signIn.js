@@ -26,7 +26,12 @@ export default function SignIn() {
     event.preventDefault();
 
     if (email === "" || password === "") {
-      toast.error("Fill in all the details");
+      toast.error("Fill in all the details", {
+        style: {
+          backgroundColor: "white",
+          WebkitTextFillColor: "red",
+        },
+      });
       return;
     }
 
@@ -44,13 +49,28 @@ export default function SignIn() {
       if (response.status === 200) {
         const { user, token } = response.data;
         localStorage.setItem("userInfo", JSON.stringify({ user, token }));
-        toast.success("Login Successful");
+        toast.success("Login Successful", {
+          style: {
+            backgroundColor: "white",
+            WebkitTextFillColor: "green",
+          },
+        });
         setRedirectToTodo(true);
       } else {
-        toast.error("Invalid credentials");
+        toast.error("Invalid credentials", {
+          style: {
+            backgroundColor: "white",
+            WebkitTextFillColor: "red",
+          },
+        });
       }
     } catch (error) {
-      toast.error("Invalid credentials");
+      toast.error("Invalid credentials", {
+        style: {
+          backgroundColor: "white",
+          WebkitTextFillColor: "red",
+        },
+      });
     }
   };
 

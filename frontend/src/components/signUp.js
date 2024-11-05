@@ -13,6 +13,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Navigate, useNavigate, useLocation } from "react-router-dom";
+import { red } from "@mui/material/colors";
 
 const defaultTheme = createTheme();
 
@@ -60,7 +61,12 @@ export default function SignUp() {
     event.preventDefault();
 
     if (name === "" || email === "" || password === "") {
-      toast.error("Fill in all the details");
+      toast.error("Fill in all the details", {
+        style: {
+          backgroundColor: "white",
+          WebkitTextFillColor: "red",
+        },
+      });
       return;
     }
 
@@ -80,13 +86,23 @@ export default function SignUp() {
         const { user, token } = response.data;
         localStorage.setItem("userInfo", JSON.stringify({ user, token }));
         console.log("user", user);
-        toast.success("SignUp Successful");
+        toast.success("SignUp Successful", {
+          style: {
+            backgroundColor: "white",
+            WebkitTextFillColor: "green",
+          },
+        });
         setRedirectToTodo(true);
       } else {
         console.log("Sign up failed");
       }
     } catch (error) {
-      toast.error("User with this Email Already Exists");
+      toast.error("User with this Email Already Exists", {
+        style: {
+          backgroundColor: "white",
+          WebkitTextFillColor: "red",
+        },
+      });
     }
   };
 
@@ -191,7 +207,12 @@ export default function SignUp() {
           </Box>
         </Box>
       </Container>
-      <ToastContainer position="top-center" autoClose={3000} hideProgressBar />
+      <ToastContainer
+        className="custom-toast"
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar
+      />
     </ThemeProvider>
   );
 }

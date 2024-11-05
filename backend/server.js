@@ -8,13 +8,14 @@ const notesRoutes = require("./routes/notesRoutes.js");
 dotenv.config();
 const app = express();
 connectDB();
-app.use(express.json()); //to accept JSON data
+app.use(express.json());
 
-console.log("FRONTEND_URL:", process.env.FRONTEND_URL); // Add this line for debugging
+console.log("process.env.FRONTEND_URL", process.env.FRONTEND_URL);
 
 app.use(
   cors({
-    origin: `${process.env.FRONTEND_URL}`, // your frontend domain
+    // origin: `${process.env.FRONTEND_URL}`,
+    origin: "http://localhost",
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })

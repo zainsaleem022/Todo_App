@@ -38,7 +38,12 @@ const TodoPage = () => {
 
   const handleAddTodo = async () => {
     if (!newTodo) {
-      toast.error("TODO cannot be empty");
+      toast.error("TODO cannot be empty", {
+        style: {
+          backgroundColor: "white",
+          WebkitTextFillColor: "red",
+        },
+      });
       return;
     }
 
@@ -58,6 +63,12 @@ const TodoPage = () => {
 
       fetchTodos();
       setNewTodo("");
+      toast.success("TODO added successfuly", {
+        style: {
+          backgroundColor: "white",
+          WebkitTextFillColor: "green",
+        },
+      });
     } catch (error) {
       console.error("Error adding todo:", error);
     }
