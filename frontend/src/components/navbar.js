@@ -51,7 +51,7 @@ function ResponsiveAppBar() {
                 textDecoration: "none",
               }}
             >
-              TODO AWS
+              TODO
             </Typography>
           </Box>
 
